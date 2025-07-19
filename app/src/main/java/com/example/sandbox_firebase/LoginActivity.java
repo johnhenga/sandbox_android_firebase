@@ -1,5 +1,6 @@
 package com.example.sandbox_firebase; // Make sure this is your correct package name
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,7 +21,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthMultiFactorException;
 import com.google.firebase.auth.FirebaseUser;
-// import com.google.firebase.auth.MultiFactorResolver; // Only if using MFA part
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -100,11 +100,6 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
-        // It's common to call updateUI here as well, or if the user is not null,
-        // you might want to automatically 'reload' to ensure their state is fresh.
-        // if (currentUser != null) {
-        //     reload();
-        // }
     }
 
     private void createAccount(String email, String password) {
@@ -258,27 +253,10 @@ public class LoginActivity extends AppCompatActivity {
 
         mBinding.progressBar.setVisibility(View.GONE);
         if (user != null) {
-            mBinding.status.setText(getString(R.string.emailpassword_status_fmt,
-                    user.getEmail(), user.isEmailVerified())); // Pass the boolean directly
-//            mBinding.status.setText(
-//                    getString(
-//                            R.string.emailpassword_status_fmt,
-//                            user.getEmail(),
-//                            String.valueOf(user.isEmailVerified()
-//                            )));
-
-            // R.string.firebase_status_fmt requires one argument: UID
-            mBinding.detail.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-
-            mBinding.emailPasswordButtons.setVisibility(View.GONE);
-            mBinding.emailPasswordFields.setVisibility(View.GONE);
-            mBinding.signedInButtons.setVisibility(View.VISIBLE);
-
-            if (user.isEmailVerified()) {
-                mBinding.verifyEmailButton.setVisibility(View.GONE);
-            } else {
-                mBinding.verifyEmailButton.setVisibility(View.VISIBLE);
-            }
+            // Navigate to MainActivity
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // Finish LoginActivity so the user can't navigate back to it
         } else {
             mBinding.status.setText(R.string.signed_out); // Ensure R.string.signed_out exists
             mBinding.detail.setText(null);
